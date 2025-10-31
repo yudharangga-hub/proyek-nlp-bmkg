@@ -1,190 +1,97 @@
-Dashboard Analisis Sentimen & Visualisasi NLP Ulasan Aplikasi BMKG
+# 🌊 Dashboard Analisis Sentimen & Visualisasi NLP Ulasan Aplikasi BMKG
 
-Dashboard analitik interaktif yang dibangun menggunakan Flask untuk membedah dan memvisualisasikan ulasan pengguna aplikasi Info BMKG. Proyek ini mengubah data teks mentah menjadi wawasan strategis melalui berbagai teknik NLP, machine learning, dan visualisasi data.
+Dashboard analitik interaktif yang dibangun menggunakan **Flask** untuk membedah dan memvisualisasikan ulasan pengguna aplikasi Info BMKG. Proyek ini mengubah data teks mentah menjadi wawasan strategis melalui berbagai teknik NLP, machine learning, dan visualisasi data.
 
-Proyek ini merupakan bagian dari Ujian Tengah Semester (UTS) mata kuliah Advanced NLP (Dosen: Dr. Sajarwo Anggai, S.ST., M.T) oleh Yudha Rangga Wulung Pura (241012000151), Mahasiswa S2 Teknik Informatika Universitas Pamulang.
+---
 
-Fitur Utama & Galeri Proyek
+### 👤 Profil Proyek
 
-Aplikasi web ini menyajikan berbagai analisis dalam antarmuka multi-tab.
+| Keterangan | Detail |
+| :--- | :--- |
+| **Mata Kuliah** | Advanced NLP |
+| **Dosen Pengampu** | Dr. Sajarwo Anggai, S.ST., M.T |
+| **Mahasiswa** | Yudha Rangga Wulung Pura |
+| **NIM** | 241012000151 |
+| **Institusi** | Magister Teknik Informatika, Universitas Pamulang |
 
-1. Ekstraksi Fitur Dasar (BoW, TF-IDF, Word Embeddings)
+---
 
-Tab ini menampilkan "tulang punggung" dari analisis NLP. Pengguna dapat melihat data teks yang telah diubah menjadi representasi numerik menggunakan Bag of Words (BoW), TF-IDF, dan Word Embeddings (Word2Vec) untuk menemukan kata-kata yang serupa secara kontekstual.
+## ✨ Fitur Utama & Galeri Proyek
 
-Fitur BoW
+Aplikasi web ini menyajikan analisis data ulasan dalam antarmuka multi-tab yang modern.
 
-Fitur TF-IDF
+### 1. Ekstraksi Fitur Dasar (BoW, TF-IDF, Word Embeddings)
 
-Fitur Word Embeddings
+Tab ini menampilkan "tulang punggung" dari analisis NLP, mengubah data teks menjadi representasi numerik yang dapat dipahami mesin.
 
-<img src="screenshots/BoW.png" width="300" alt="Tampilan Bag of Words">
+| Bag of Words (BoW) | TF-IDF | Word Embeddings (Word2Vec) |
+| :---: | :---: | :---: |
+| <img src="screenshots/BoW.png" width="300" alt="Tampilan Bag of Words" style="display: block; margin: auto;"> | <img src="screenshots/tf-idf.png" width="300" alt="Tampilan TF-IDF" style="display: block; margin: auto;"> | <img src="screenshots/Word-Embed.png" width="300" alt="Tampilan Word Embeddings" style="display: block; margin: auto;"> |
 
-<img src="screenshots/tf-idf.png" width="300" alt="Tampilan TF-IDF">
+### 2. Topic Modeling Otomatis (LDA & BERTopic)
 
-<img src="screenshots/Word-Embed.png" width="300" alt="Tampilan Word Embeddings">
+Untuk memahami tema-tema utama yang dibicarakan pengguna.
 
-2. Topic Modeling Otomatis (LDA & BERTopic)
+| LDA (Latent Dirichlet Allocation) | BERTopic (Modern Contextual Model) |
+| :---: | :---: |
+| <img src="screenshots/lda.png" width="450" alt="Tampilan Topic Modeling LDA" style="display: block; margin: auto;"> | <img src="screenshots/bertopic.png" width="450" alt="Tampilan Topic Modeling BERTopic" style="display: block; margin: auto;"> |
 
-Untuk memahami "apa yang paling sering dibicarakan pengguna", dua model topic modeling diimplementasikan:
+### 3. Evaluasi Model & Analisis Sentimen (Supervised)
 
-LDA (Latent Dirichlet Allocation): Metode statistik klasik untuk menemukan tema-tema umum.
+Ini adalah inti dari dashboard yang menunjukkan performa model Logistic Regression yang telah dilatih dan memprediksi sentimen pada data baru.
 
-BERTopic: Metode modern yang menggunakan embeddings SBERT untuk menemukan topik yang lebih akurat secara kontekstual.
+| Confusion Matrix (Evaluasi Kinerja) | Distribusi Sentimen (Simulasi Prediksi) |
+| :---: | :---: |
+| <img src="screenshots/conf-matrix.png" width="450" alt="Tampilan Confusion Matrix" style="display: block; margin: auto;"> | <img src="screenshots/Sentimen.png" width="450" alt="Tampilan Distribusi Sentimen Donat" style="display: block; margin: auto;"> |
 
-Tampilan LDA
+### 4. Visualisasi Klastering & Distribusi (Unsupervised)
 
-Tampilan BERTopic
-
-<img src="screenshots/lda.png" width="450" alt="Tampilan Topic Modeling LDA">
-
-<img src="screenshots/bertopic.png" width="450" alt="Tampilan Topic Modeling BERTopic">
-
-3. Visualisasi Word Cloud
-
-Visualisasi ringkas dari kata-kata yang paling sering muncul di seluruh dataset, memberikan gambaran instan tentang fokus utama ulasan.
-
-<p align="center">
-<img src="screenshots/word-cloud.png" width="600" alt="Tampilan Word Cloud">
-</p>
-
-4. Evaluasi Model & Analisis Sentimen (Supervised)
-
-Ini adalah inti dari dashboard yang menunjukkan performa model Logistic Regression yang telah dilatih:
-
-Laporan Evaluasi: Menampilkan Confusion Matrix visual untuk melihat kesalahan prediksi secara detail.
-
-Simulasi Prediksi: Model yang sudah dilatih digunakan untuk memprediksi sentimen dari data yang diunggah, disajikan dalam bentuk grafik donat (terlihat di Sentimen.png).
-
-Confusion Matrix
-
-Distribusi Sentimen (Simulasi)
-
-<img src="screenshots/conf-matrix.png" width="450" alt="Tampilan Confusion Matrix">
-
-<img src="screenshots/Sentimen.png" width="450" alt="Tampilan Distribusi Sentimen Donat">
-
-5. Visualisasi Klastering & Distribusi (Unsupervised)
-
-Tab Visualisasi Sentimen: Tab ini berfokus pada hasil analisis data .txt yang diunggah:
-
-Silhouette Score (K-Means): Mengukur seberapa "alami" data terkelompok menggunakan gauge meter. Skor rendah menunjukkan data yang tumpang tindih—memvalidasi perlunya model supervised.
-
-Distribusi Sentimen: Grafik batang horizontal modern yang menampilkan persentase dan jumlah pasti dari prediksi.
+Analisis data yang diunggah, menampilkan seberapa baik data terkelompok secara alami dan hasil distribusi sentimen.
 
 <p align="center">
-<img src="screenshots/siluet-skor.png" width="700" alt="Tampilan Visualisasi Klastering dan Distribusi Sentimen">
+<img src="screenshots/siluet-skor.png" width="700" alt="Tampilan Visualisasi Klastering dan Distribusi Sentimen" style="display: block; margin: auto;">
 </p>
 
-6. Upload Data & Halaman Depan
+### 5. Visualisasi Word Cloud & Halaman Upload
 
-Tampilan halaman untuk mengunggah dataset baru (.txt).
+| Word Cloud (Fokus Kata Kunci) | Halaman Upload Data |
+| :---: | :---: |
+| <img src="screenshots/word-cloud.png" width="450" alt="Tampilan Word Cloud" style="display: block; margin: auto;"> | <img src="screenshots/upload.png" width="450" alt="Tampilan Halaman Upload Dataset" style="display: block; margin: auto;"> |
 
-<p align="center">
-<img src="screenshots/upload.png" width="450" alt="Tampilan Halaman Upload Dataset">
-</p>
 
-Alur Kerja (Workflow) Proyek
+---
 
-Persiapan Data: Aplikasi ini memiliki dua alur data:
+## 🛠️ Alur Kerja (Workflow) Proyek
 
-Data Latih (Offline/Lokal): File Data Komen Apps InfoBMKG - dataset_bmkg_reviews.csv harus ada di folder utama saat app.py dijalankan. File ini digunakan hanya untuk melatih model Logistic Regression.
+Aplikasi ini menggunakan dual-pipeline untuk pemrosesan data:
 
-Data Analisis (Online/Upload): File .txt diunggah oleh pengguna melalui interface web. Data inilah yang akan dianalisis oleh semua fitur.
+1.  **Pra-Pemrosesan (NLP Pipeline):** Semua teks melalui urutan proses: **Cleaning** → **Tokenization** → **Stopword Removal** (NLTK + Custom) → **Stemming** (Sastrawi).
 
-Pra-Pemrosesan (NLP Pipeline): Semua teks melalui proses Cleaning, Tokenization, Stopword Removal (NLTK + Custom), dan Stemming (Sastrawi).
+2.  **Pipeline Data:**
+    * **Data Latih (Offline):** File `dataset_bmkg_reviews.csv` digunakan saat `app.py` dijalankan. File ini hanya digunakan untuk melatih model **Logistic Regression** (metode supervised).
+    * **Data Analisis (Online):** File `.txt` diunggah oleh pengguna. Data ini diproses oleh **semua** fitur ekstrak fitur, topic modeling, dan visualisasi.
 
-Pelatihan Model (Saat Startup): Saat app.py dijalankan, ia akan mencari file .csv dan melatih model Logistic Regression. Jika file .csv tidak ditemukan, server tetap berjalan, namun fitur sentimen akan dinonaktifkan.
+3.  **Logika Server:**
+    * **Pelatihan Model:** Saat `app.py` dimulai, ia akan mencari file `.csv` dan melatih model Logistic Regression. Jika file `.csv` tidak ditemukan, server tetap berjalan, namun fitur sentimen (*supervised*) akan dinonaktifkan.
+    * **Simulasi Prediksi:** Model Logistic Regression yang sudah ada di memori digunakan untuk memprediksi sentimen pada data `.txt` yang baru diunggah.
 
-Analisis & Ekstraksi Fitur (Saat Upload): Saat pengguna mengunggah file .txt, data tersebut diproses untuk menghasilkan: II, BoW, TF-IDF, Word2Vec, SBERT Embeddings, LDA, dan BERTopic.
+---
 
-Simulasi Prediksi (Saat Upload): Model Logistic Regression yang sudah ada di memori digunakan untuk memprediksi sentimen pada data .txt yang baru diunggah.
+## 📁 Struktur Proyek
 
-Visualisasi Flask: Semua hasil dikirim ke frontend dan ditampilkan secara interaktif di dashboard web.
-
-Struktur Proyek
-
-Berdasarkan struktur folder Anda yang sebenarnya, saya akan memformatnya agar tampil sebagai daftar pohon yang rapi, bukan sebagai paragraf kode.
-
+```text
 Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis/
 ├── app.py                 # File utama Flask (Backend)
 ├── requirements.txt       # Daftar library Python yang diperlukan
 ├── .gitignore             # File untuk mengabaikan folder environment
 ├── README.md              # File ini
-├── Data Komen Apps InfoBMKG - dataset_bmkg_reviews.csv # (WAJIB ADA)
-├── dataset_bmkg_reviews.txt                            # (Opsional, untuk diunggah)
+├── dataset_bmkg_reviews.csv # (WAJIB ADA) Dataset Latih
 ├── screenshots/           # Folder untuk menyimpan tangkapan layar
-│   ├── BoW.png
-│   ├── Sentimen.png
-│   ├── bertopic.png
-│   ├── conf-matrix.png
-│   ├── lda.png
-│   ├── siluet-skor.png
-│   ├── tf-idf.png
-│   ├── upload.png
-│   ├── word-cloud.png
-│   └── Word-Embed.png
+│   └── (Semua file PNG demo)
 ├── static/
 │   ├── css/
 │   │   └── style.css      # File styling
 │   └── images/
-│       ├── UNPAM_logo1.png
-│       └── wordcloud_general.png
+│       └── UNPAM_logo1.png
 └── templates/
     └── index.html         # File utama HTML (Frontend)
-
-
-Cara Menjalankan Proyek Secara Lokal
-
-Clone Repositori:
-
-git clone [https://github.com/yudharangga-hub/proyek-nlp-bmkg.git](https://github.com/yudharangga-hub/proyek-nlp-bmkg.git)
-cd Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis
-
-
-(Catatan: Perintah ini mungkin berbeda jika Anda menggunakan antarmuka git desktop atau lainnya. Pastikan Anda berada di direktori proyek.)
-
-Buat Virtual Environment:
-(Direkomendasikan untuk menghindari konflik library)
-
-# Menggunakan conda (jika Anda menggunakan Anaconda)
-conda create -n nlp-bmkg python=3.9
-conda activate nlp-bmkg
-
-# Atau menggunakan venv (bawaan Python)
-# python -m venv venv
-# python venv/Scripts/activate # Mengaktifkan di Windows
-
-
-Install Library yang Dibutuhkan:
-Gunakan file requirements.txt yang telah disediakan.
-
-pip install -r requirements.txt
-
-
-(Catatan: torch dan sentence-transformers mungkin memakan waktu untuk diunduh).
-
-Siapkan Dataset Latih (WAJIB untuk Fitur Sentimen):
-
-Pastikan file Data Komen Apps InfoBMKG - dataset_bmkg_reviews.csv ada di folder utama (sejajar dengan app.py).
-
-Tanpa file ini, server akan tetap berjalan, tetapi semua fitur "Analisis Sentimen" dan "Visualisasi Sentimen" tidak akan berfungsi.
-
-Jalankan Aplikasi Flask:
-
-python app.py
-
-
-(Aplikasi akan dimulai dalam keadaan "kosong".)
-
-Buka di Browser dan Unggah Data:
-
-Buka http://127.0.0.1:5000 di browser Anda.
-
-Navigasi ke tab "Upload Dataset".
-
-Unggah file .txt (seperti dataset_bmkg_reviews.txt jika ada) untuk memulai analisis.
-
-Link Repositori
-
-https://github.com/yudharangga-hub/proyek-nlp-bmkg.git
