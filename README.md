@@ -12,9 +12,6 @@ Aplikasi web ini menyajikan berbagai analisis dalam antarmuka multi-tab.
 
 Tab ini menampilkan "tulang punggung" dari analisis NLP. Pengguna dapat melihat data teks yang telah diubah menjadi representasi numerik menggunakan Bag of Words (BoW), TF-IDF, dan Word Embeddings (Word2Vec) untuk menemukan kata-kata yang serupa secara kontekstual.
 
-
-
-
 Fitur BoW
 
 Fitur TF-IDF
@@ -105,14 +102,6 @@ Simulasi Prediksi (Saat Upload): Model Logistic Regression yang sudah ada di mem
 
 Visualisasi Flask: Semua hasil dikirim ke frontend dan ditampilkan secara interaktif di dashboard web.
 
-Teknologi yang Digunakan
-
-Backend: Flask, Pandas, Scikit-learn (Logistic Regression, TF-IDF, K-Means, Silhouette Score), NLTK, Sastrawi, Gensim (Word2Vec), Sentence-Transformers, BERTopic, WordCloud.
-
-Frontend: HTML5, CSS3, JavaScript (untuk interaktivitas tab dan visualisasi dinamis).
-
-Visualisasi: Matplotlib (untuk Confusion Matrix) & CSS/JavaScript (untuk grafik batang, gauge meter, dan efek "The Matrix").
-
 Struktur Proyek
 
 Berdasarkan struktur folder Anda yang sebenarnya:
@@ -143,6 +132,7 @@ Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis/
 │       └── wordcloud_general.png
 └── templates/
     └── index.html         # File utama HTML (Frontend)
+
 
 
 Cara Menjalankan Proyek Secara Lokal
