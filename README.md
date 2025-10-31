@@ -87,7 +87,7 @@ cd Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis
 2. Siapkan Virtual Environment (Direkomendasikan)
 Bash
 
-# Menggunakan conda
+### Menggunakan conda
 conda create -n nlp-bmkg python=3.9
 conda activate nlp-bmkg
 
