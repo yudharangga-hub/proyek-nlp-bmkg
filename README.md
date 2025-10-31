@@ -77,28 +77,7 @@ Aplikasi ini menggunakan dual-pipeline untuk pemrosesan data:
 
 ---
 
-## 📁 Struktur Proyek
-
-```text
-Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis/
-├── app.py                 # File utama Flask (Backend)
-├── requirements.txt       # Daftar library Python yang diperlukan
-├── .gitignore             # File untuk mengabaikan folder environment
-├── README.md              # File ini
-├── dataset_bmkg_reviews.csv # (WAJIB ADA) Dataset Latih
-├── screenshots/           # Folder untuk menyimpan tangkapan layar
-│   └── (Semua file PNG demo)
-├── static/
-│   ├── css/
-│   │   └── style.css      # File styling
-│   └── images/
-│       └── UNPAM_logo1.png
-└── templates/
-    └── index.html         # File utama HTML (Frontend)
-
----
-
-### 💻 Cara Menjalankan Proyek Secara Lokal
+## 💻 Cara Menjalankan Proyek Secara Lokal
 1. Clone Repositori
 Bash
 
@@ -129,3 +108,24 @@ Buka http://127.0.0.1:5000 di browser Anda.
 Navigasi ke tab "Upload Dataset" dan unggah file .txt untuk memulai analisis data baru.
 
 [Link Repositori: https://github.com/yudharangga-hub/proyek-nlp-bmkg.git]
+
+---
+
+## 📁 Struktur Proyek
+
+```text
+Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis/
+├── app.py                 # File utama Flask (Backend)
+├── requirements.txt       # Daftar library Python yang diperlukan
+├── .gitignore             # File untuk mengabaikan folder environment
+├── README.md              # File ini
+├── dataset_bmkg_reviews.csv # (WAJIB ADA) Dataset Latih
+├── screenshots/           # Folder untuk menyimpan tangkapan layar
+│   └── (Semua file PNG demo)
+├── static/
+│   ├── css/
+│   │   └── style.css      # File styling
+│   └── images/
+│       └── UNPAM_logo1.png
+└── templates/
+    └── index.html         # File utama HTML (Frontend)
