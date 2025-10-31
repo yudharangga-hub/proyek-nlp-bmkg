@@ -152,14 +152,15 @@ conda activate nlp-bmkg
 
 # Atau menggunakan venv (bawaan Python)
 # python -m venv venv
-# source venv/bin/activate  # (Di Mac/Linux)
-# .\venv\Scripts\activate    # (Di Windows)
+# python venv/Scripts/activate # Mengaktifkan di Windows
+
 
 
 Install Library yang Dibutuhkan:
 Gunakan file requirements.txt yang telah disediakan.
 
 pip install -r requirements.txt
+
 
 
 (Catatan: torch dan sentence-transformers mungkin memakan waktu untuk diunduh).
@@ -173,6 +174,7 @@ Tanpa file ini, server akan tetap berjalan, tetapi semua fitur "Analisis Sentime
 Jalankan Aplikasi Flask:
 
 python app.py
+
 
 
 (Aplikasi akan dimulai dalam keadaan "kosong".)
