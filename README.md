@@ -95,3 +95,38 @@ Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis/
 │       └── UNPAM_logo1.png
 └── templates/
     └── index.html         # File utama HTML (Frontend)
+
+
+---
+
+💻 Cara Menjalankan Proyek Secara Lokal
+1. Clone Repositori
+Bash
+
+git clone [https://github.com/yudharangga-hub/proyek-nlp-bmkg.git](https://github.com/yudharangga-hub/proyek-nlp-bmkg.git)
+cd Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis
+2. Siapkan Virtual Environment (Direkomendasikan)
+Bash
+
+# Menggunakan conda
+conda create -n nlp-bmkg python=3.9
+conda activate nlp-bmkg
+3. Install Library yang Dibutuhkan
+(Perhatian: Library yang besar mungkin memerlukan waktu untuk diunduh.)
+
+Bash
+
+pip install -r requirements.txt
+4. Siapkan Dataset Latih (WAJIB)
+Pastikan file dataset_bmkg_reviews.csv ada di folder utama (sejajar dengan app.py) agar semua fitur Analisis Sentimen dapat berfungsi.
+
+5. Jalankan Aplikasi Flask
+Bash
+
+python app.py
+6. Akses Dashboard
+Buka http://127.0.0.1:5000 di browser Anda.
+
+Navigasi ke tab "Upload Dataset" dan unggah file .txt untuk memulai analisis data baru.
+
+[Link Repositori: https://github.com/yudharangga-hub/proyek-nlp-bmkg.git]
