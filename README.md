@@ -104,7 +104,7 @@ Visualisasi Flask: Semua hasil dikirim ke frontend dan ditampilkan secara intera
 
 Struktur Proyek
 
-Berdasarkan struktur folder Anda yang sebenarnya:
+Berdasarkan struktur folder Anda yang sebenarnya, saya akan memformatnya agar tampil sebagai daftar pohon yang rapi, bukan sebagai paragraf kode.
 
 Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis/
 ├── app.py                 # File utama Flask (Backend)
@@ -134,7 +134,6 @@ Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis/
     └── index.html         # File utama HTML (Frontend)
 
 
-
 Cara Menjalankan Proyek Secara Lokal
 
 Clone Repositori:
@@ -142,6 +141,8 @@ Clone Repositori:
 git clone [https://github.com/yudharangga-hub/proyek-nlp-bmkg.git](https://github.com/yudharangga-hub/proyek-nlp-bmkg.git)
 cd Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis
 
+
+(Catatan: Perintah ini mungkin berbeda jika Anda menggunakan antarmuka git desktop atau lainnya. Pastikan Anda berada di direktori proyek.)
 
 Buat Virtual Environment:
 (Direkomendasikan untuk menghindari konflik library)
@@ -155,12 +156,10 @@ conda activate nlp-bmkg
 # python venv/Scripts/activate # Mengaktifkan di Windows
 
 
-
 Install Library yang Dibutuhkan:
 Gunakan file requirements.txt yang telah disediakan.
 
 pip install -r requirements.txt
-
 
 
 (Catatan: torch dan sentence-transformers mungkin memakan waktu untuk diunduh).
@@ -174,7 +173,6 @@ Tanpa file ini, server akan tetap berjalan, tetapi semua fitur "Analisis Sentime
 Jalankan Aplikasi Flask:
 
 python app.py
-
 
 
 (Aplikasi akan dimulai dalam keadaan "kosong".)
