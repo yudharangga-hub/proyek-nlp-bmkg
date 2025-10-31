@@ -1,0 +1,12 @@
+flask
+nltk
+sastrawi
+scikit-learn
+pandas
+numpy
+matplotlib
+torch
+gensim
+sentence-transformers
+bertopic
+wordcloud

@@ -1,0 +1,41 @@
+File ini memberi tahu Git file/folder apa yang harus diabaikan
+
+dan tidak di-upload ke GitHub.
+
+Virtual Environments
+
+(Termasuk nama environment Anda 'syarva')
+
+venv/
+/venv/
+.venv/
+/.venv/
+syarva/
+/syarva/
+env/
+/env/
+.env
+
+Python cache
+
+pycache/
+*.pyc
+*.pyo
+*.pyd
+*.py[cod]
+
+File OS
+
+.DS_Store
+Thumbs.db
+
+Folder Uploads (dari app.py)
+
+uploads/
+/uploads/
+
+File yang Dihasilkan (Generated)
+
+(Seperti gambar wordcloud yang dibuat oleh app.py)
+
+static/images/wordcloud_general.png
