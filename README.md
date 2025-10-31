@@ -96,10 +96,9 @@ Proyek_ProposalUTS_NLP_YudhaRWP-SentimenAnalisis/
 └── templates/
     └── index.html         # File utama HTML (Frontend)
 
-
 ---
 
-💻 Cara Menjalankan Proyek Secara Lokal
+### 💻 Cara Menjalankan Proyek Secara Lokal
 1. Clone Repositori
 Bash
 
