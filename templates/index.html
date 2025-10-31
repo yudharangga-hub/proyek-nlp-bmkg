@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Feature Extraction - UNPAM</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    
+    <!-- EFEK MATRIX (BARU) -->
+    <canvas id="matrix-canvas-left"></canvas>
+    <canvas id="matrix-canvas-right"></canvas>
+    <!-- AKHIR EFEK MATRIX -->
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p>MEMPROSES TRANSMISI DATA... <br> HARAP TUNGGU, KONEKSI KE NIGHT CITY SEDANG DIBUAT.</p>
+    </div>
+
+    <header>
+        <div class="container header-content">
+            <img src="{{ url_for('static', filename='images/UNPAM_logo1.png') }}" alt="Logo UNPAM" class="logo">
+            <h1>VISUALISASI FITUR TEKS (NLP)</h1>
+        </div>
+    </header>
+
+    <div class="scroll-container">
+        <div class="scroll-text">
+            Nama : Yudha Rangga Wulung Pura  |  NIM : 241012000151  |  Magister Teknik Informatika - Universitas Pamulang
+        </div>
+    </div>
+
+    <main class="container">
+        
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="tab-buttons">
+            <button class="tab-link active" onclick="openTab(event, 'tab-ii')">Inverted Index</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-bow')">Bag of Words (BoW)</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-tfidf')">TF-IDF</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-w2v')">Word Embeddings</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-wordcloud')">Word Cloud</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-lda')">Topic Model (LDA)</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-bertopic')">Topic Model (BERTopic)</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-sentiment')">Analisis Sentimen</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-sentiment-viz')">Visualisasi Sentimen</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-semantic')">Pencarian Semantik</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-dataset')">Dataset (Corpus)</button>
+            <button class="tab-link" onclick="openTab(event, 'tab-upload')">Upload Dataset</button>
+        </div>
+
+        <div id="tab-ii" class="tab-content active">
+             <!-- ... Konten tab Inverted Index ... -->
+             <div class="card">
+                <h2>Inverted Index (100 Term Pertama)</h2>
+                <p>Menunjukkan pemetaan dari setiap *term* (kata unik yang sudah di-stem) ke dokumen (komentar) tempat term tersebut muncul.</p>
+                <div class="table-container index-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term (Token)</th>
+                                <th>Posting List (Lokasi Dokumen)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if inverted_index %}
+                                {% for term, doc_list in inverted_index.items() %}
+                                <tr>
+                                    <td>{{ term }}</td>
+                                    <td>{{ doc_list | join(', ') }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="2">Data tidak ditemukan. Silakan upload dataset.</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-bow" class="tab-content">
+            <!-- ... Konten tab BoW ... -->
+            <div class="card">
+                <h2>Bag of Words (BoW) - 5 Dokumen Pertama</h2>
+                <p>Visualisasi ini menunjukkan *frekuensi mentah* (hitungan) dari setiap term dalam sebuah dokumen. Term yang tidak ada (skor 0) tidak ditampilkan. Menggunakan vocabulary dari 1000 term paling umum.</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dokumen ID</th>
+                                <th>Term (Token)</th>
+                                <th>Frekuensi (Count)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bow-results-body">
+                            {% for row in bow_data %}
+                            <tr>
+                                <td>{{ row.doc }}</td>
+                                <td class="term-bold">{{ row.term }}</td>
+                                <td>{{ row.score }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3">Data BoW tidak tersedia. Silakan upload dataset.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-tfidf" class="tab-content">
+            <!-- ... Konten tab TF-IDF ... -->
+            <div class="card">
+                <h2>TF-IDF - 5 Dokumen Pertama</h2>
+                <p>Visualisasi ini menunjukkan *skor kepentingan* (TF-IDF) dari setiap term. Skor tinggi berarti term tersebut penting untuk dokumen itu, tetapi tidak umum di semua dokumen lain. Menggunakan vocabulary dari 1000 term paling umum.</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dokumen ID</th>
+                                <th>Term (Token)</th>
+                                <th>Skor TF-IDF</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tfidf-results-body">
+                            {% for row in tfidf_data %}
+                            <tr>
+                                <td>{{ row.doc }}</td>
+                                <td class="term-bold">{{ row.term }}</td>
+                                <td>{{ row.score }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3">Data TF-IDF tidak tersedia. Silakan upload dataset.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-w2v" class="tab-content">
+            <!-- ... Konten tab Word Embeddings ... -->
+            <div class="card">
+                <h2>Word Embeddings (Word2Vec)</h2>
+                <p>Model ini mempelajari makna kata berdasarkan konteksnya. Visualisasi ini menunjukkan 5 kata yang paling *mirip* (paling dekat secara semantik) dengan kata kueri, berdasarkan dataset komentar yang ada. Kata yang jarang muncul (kurang dari 5x) mungkin tidak ada di model.</p>
+                {% if w2v_data is not none %}
+                    <form id="w2v-query-form" class="query-form">
+                        <label for="w2v-query-input">Masukkan Kata Kueri:</label>
+                        <input type="text" id="w2v-query-input" placeholder="Contoh: sumur, bohong, izin...">
+                        <button type="submit">Cari Kata Serupa</button>
+                    </form>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kata Kueri</th>
+                                    <th>Top 5 Kata Serupa (dan Skor Kemiripan)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="w2v-results-body">
+                                {% for word, similar in w2v_data.items() %}
+                                <tr>
+                                    <td class="term-bold">{{ word }}</td>
+                                    <td>{{ similar }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="2">Data Word Embeddings tidak tersedia.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p><i>Model Word2Vec tidak dapat dimuat (mungkin dataset terlalu kecil atau `min_count` terlalu tinggi). Silakan upload dataset yang lebih besar.</i></p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div id="tab-wordcloud" class="tab-content">
+            <!-- ... Konten tab Word Cloud ... -->
+            <div class="card">
+                <h2>Word Cloud Umum (Seluruh Dataset)</h2>
+                <p>Visualisasi kata-kata yang paling sering muncul (setelah preprocessing) dari *seluruh* dataset. Ukuran kata menunjukkan frekuensinya.</p>
+                <div class="wordcloud-container">
+                    <img src="{{ url_for('static', filename='images/wordcloud_general.png') }}?v={{ cache_buster }}" alt="Word Cloud Umum">
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-lda" class="tab-content">
+            <!-- ... Konten tab LDA ... -->
+            <div class="card">
+                <h2>Topic Model (LDA)</h2>
+                <p>Latent Dirichlet Allocation (LDA) adalah model yang mengelompokkan dokumen ke dalam beberapa topik. Berikut adalah 5 klaster topik utama yang ditemukan di seluruh dataset komentar, beserta 10 kata kunci yang paling mewakili topik tersebut.</p>
+                
+                {% if lda_data %}
+                    <h3>Topik Utama dan Kata Kunci</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama Topik</th>
+                                    <th>Top 10 Kata Kunci</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for topic_name, keywords in lda_data.items() %}
+                                <tr>
+                                    <td class="term-bold">{{ topic_name }}</td>
+                                    <td>{{ keywords }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="2">Data LDA tidak tersedia.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <hr class="section-divider"> <h3>Distribusi Topik per Dokumen</h3>
+                    <p>Pilih dokumen untuk melihat persentase keanggotaannya di setiap topik.</p>
+                    
+                    <form class="query-form" id="lda-doc-form">
+                        <label for="lda-doc-select">Pilih Dokumen:</label>
+                        <select id="lda-doc-select" name="doc_id">
+                            {% for doc_name in doc_names_list %}
+                            <option value="{{ doc_name }}">{{ doc_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+
+                    <div id="lda-distribution-result" class="distribution-result-container">
+                        <p><i>Pilih dokumen di atas untuk melihat distribusi topiknya.</i></p>
+                        </div>
+
+                {% else %}
+                    <p><i>Data LDA tidak tersedia. Silakan upload dataset.</i></p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div id="tab-bertopic" class="tab-content">
+            <!-- ... Konten tab BERTopic ... -->
+            <div class="card">
+                <h2>Topic Model (BERTopic)</h2>
+                <p>BERTopic menggunakan *embeddings* (dari model Transformer) dan *clustering* untuk menemukan topik. Model ini seringkali lebih baik dalam memahami konteks semantik dibandingkan LDA, namun mungkin mengidentifikasi "Topik Outlier" (dokumen yang tidak masuk ke klaster manapun).</p>
+                
+                {% if bertopic_data %}
+                    <h3>Topik Utama dan Kata Kunci</h3>
+                    <p>Hanya topik-topik yang ditemukan (bukan outlier -1) yang ditampilkan.</p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama Topik (ID dan Nama Auto)</th>
+                                    <th>Top 10 Kata Kunci (Representation)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for topic_name, keywords in bertopic_data.items() %}
+                                <tr>
+                                    <td class="term-bold">{{ topic_name }}</td>
+                                    <td>{{ keywords }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="2">Data BERTopic tidak tersedia (Model gagal dilatih atau tidak menemukan topik).</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <hr class="section-divider">
+                    
+                    <h3>Distribusi Topik per Dokumen (BERTopic)</h3>
+                    <p>Pilih dokumen untuk melihat probabilitas keanggotaannya di setiap topik. Dokumen mungkin memiliki probabilitas tinggi di banyak topik atau tidak sama sekali.</p>
+                    
+                    <form class="query-form" id="bertopic-doc-form">
+                        <label for="bertopic-doc-select">Pilih Dokumen:</label>
+                        <select id="bertopic-doc-select" name="doc_id">
+                            {% for doc_name in doc_names_list %}
+                            <option value="{{ doc_name }}">{{ doc_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+
+                    <div id="bertopic-distribution-result" class="distribution-result-container">
+                        <p><i>Pilih dokumen di atas untuk melihat distribusi topiknya.</i></p>
+                    </div>
+
+                {% else %}
+                    <p><i>Data BERTopic tidak tersedia. Model mungkin gagal dilatih (cek log server) atau dataset Anda terlalu kecil (BERTopic umumnya butuh > 50 dokumen).</i></p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="tab-sentiment" class="tab-content">
+            <!-- ... Konten tab Analisis Sentimen (Laporan Evaluasi & Simulasi) ... -->
+            <div class="card">
+                <h2>Analisis Sentimen</h2>
+                <p>Tab ini menampilkan dua bagian: (1) Laporan evaluasi performa model sentimen yang dilatih pada file CSV, dan (2) Simulasi prediksi model tersebut pada data .txt yang Anda unggah.</p>
+                
+                <!-- BAGIAN 1: LAPORAN EVALUASI (BARU) -->
+                <hr class="section-divider">
+                <h3>Laporan Evaluasi Model (dari Data Latih CSV)</h3>
+                
+                {% if sentiment_accuracy %}
+                    <p>Bagian ini menunjukkan performa model Logistic Regression yang dilatih pada file CSV data berlabel. Evaluasi ini dilakukan pada **data uji (20% dari data CSV)**.</p>
+                    
+                    <h4>Akurasi (Accuracy): <span style="color: #fefc00; font-family: 'Orbitron';">{{ sentiment_accuracy }}%</span></h4>
+                    <p class="evaluation-explanation">
+                        **Akurasi** adalah metrik paling dasar: dari semua tebakan yang dibuat model, berapa persen yang benar? Akurasi 76.41% berarti model berhasil menebak sentimen dengan benar pada sekitar 76 dari 100 ulasan uji.
+                    </p>
+
+                    <!-- Laporan Klasifikasi (Tabel) -->
+                    <div class="report-table-container evaluation-item-full-width">
+                        <h4>Laporan Klasifikasi (Precision, Recall, F1-Score)</h4>
+                        <p class="evaluation-explanation">
+                            Tabel ini membedah performa model untuk setiap kelas sentimen:
+                            <ul>
+                                <li><strong>Precision:</strong> Dari semua yang ditebak sebagai 'Positif', berapa persen yang *benar-benar* 'Positif'? (Akurasi tebakan 'Positif').</li>
+                                <li><strong>Recall:</strong> Dari semua ulasan 'Positif' yang *sebenarnya*, berapa persen yang berhasil *ditemukan* oleh model? (Kelengkapan deteksi 'Positif').</li>
+                                <li><strong>F1-Score:</strong> Rata-rata harmonik dari Precision dan Recall. Ini adalah metrik terbaik untuk mengukur performa pada data yang tidak seimbang.</li>
+                                <li><strong>Support:</strong> Jumlah data aktual untuk setiap kelas di dalam data uji.</li>
+                            </ul>
+                        </p>
+                        <div class="table-container" style="max-height: 400px;"> <!-- LEBIH BESAR -->
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Label</th>
+                                        <th>Precision</th>
+                                        <th>Recall</th>
+                                        <th>F1-Score</th>
+                                        <th>Support</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for label, metrics in sentiment_report.items() %}
+                                        {% if label in ['Positif', 'Negatif', 'Netral'] %}
+                                        <tr>
+                                            <td class="term-bold">{{ label }}</td>
+                                            <td>{{ "%.2f"|format(metrics.precision) }}</td>
+                                            <td>{{ "%.2f"|format(metrics.recall) }}</td>
+                                            <td>{{ "%.2f"|format(metrics['f1-score']) }}</td>
+                                            <td>{{ metrics.support }}</td>
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <tr style="background-color: #2a2a2a;">
+                                        <td class="term-bold">Macro Avg</td>
+                                        <td>{{ "%.2f"|format(sentiment_report['macro avg'].precision) }}</td>
+                                        <td>{{ "%.2f"|format(sentiment_report['macro avg'].recall) }}</td>
+                                        <td>{{ "%.2f"|format(sentiment_report['macro avg']['f1-score']) }}</td>
+                                        <td>{{ sentiment_report['macro avg'].support }}</td>
+                                    </tr>
+                                    <tr style="background-color: #2a2a2a;">
+                                        <td class="term-bold">Weighted Avg</td>
+                                        <td>{{ "%.2f"|format(sentiment_report['weighted avg'].precision) }}</td>
+                                        <td>{{ "%.2f"|format(sentiment_report['weighted avg'].recall) }}</td>
+                                        <td>{{ "%.2f"|format(sentiment_report['weighted avg']['f1-score']) }}</td>
+                                        <td>{{ sentiment_report['weighted avg'].support }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider"> <!-- PEMISAH -->
+
+                    <!-- Confusion Matrix (Gambar) -->
+                    <div class="confusion-matrix-container evaluation-item-full-width">
+                        <h4>Confusion Matrix (Data Uji)</h4>
+                        <p class="evaluation-explanation">
+                            **Confusion Matrix** adalah "rekaman CCTV" dari hasil ujian model.
+                            <ul>
+                                <li><strong>Sumbu Y (Vertikal):</strong> Label Sebenarnya (True Label).</li>
+                                <li><strong>Sumbu X (Horizontal):</strong> Label Prediksi Model (Predicted Label).</li>
+                                <li><strong>Diagonal (Biru Tua):</strong> Ini adalah tebakan yang BENAR (True Positives/Negatives/Neutrals). Semakin banyak angka di diagonal, semakin baik.</li>
+                                <li><strong>Luar Diagonal (Biru Muda):</strong> Ini adalah tebakan yang SALAH (Errors). Angka di sini menunjukkan di mana model paling sering "bingung".</li>
+                            </ul>
+                            Dari gambar ini (jika melihat contoh `[4 9 3]` di baris 'Netral'), kita bisa simpulkan bahwa model sering salah menebak 9 ulasan 'Netral' sebagai 'Negatif'.
+                        </p>
+                        {% if sentiment_cm_img %}
+                            <img src="{{ sentiment_cm_img }}" alt="Confusion Matrix" style="width: 100%; max-width: 500px; height: auto;"> <!-- LEBIH BESAR -->
+                        {% else %}
+                            <p><i>Gambar confusion matrix tidak tersedia.</i></p>
+                        {% endif %}
+                    </div>
+                {% else %}
+                     <p><i>Laporan evaluasi tidak tersedia. Model sentimen mungkin gagal dilatih. Periksa file CSV berlabel dan log server.</i></p>
+                {% endif %}
+
+                <!-- BAGIAN 2: SIMULASI PREDIKSI (LAMA) -->
+                <hr class="section-divider">
+                <h3>Simulasi Prediksi (pada Data .txt yang Di-upload)</h3>
+
+                {% if sentiment_distribution %}
+                    <h4>Distribusi Sentimen Keseluruhan</h4>
+                    <div class="sentiment-distribution">
+                        <div class="donut-chart-container">
+                            <div class="donut-chart" 
+                                 style="--pos: {{ sentiment_distribution.Positif }}; --neg: {{ sentiment_distribution.Negatif }}; --neu: {{ sentiment_distribution.Netral }};">
+                            </div>
+                        </div>
+                        <div class="sentiment-legend">
+                            <p>
+                                <span class="legend-color-box positive"></span>
+                                Positif
+                                <strong>{{ sentiment_distribution.Positif }}%</strong>
+                            </p>
+                            <p>
+                                <span class="legend-color-box negative"></span>
+                                Negatif
+                                <strong>{{ sentiment_distribution.Negatif }}%</strong>
+                            </p>
+                            <p>
+                                <span class="legend-color-box neutral"></span>
+                                Netral
+                                <strong>{{ sentiment_distribution.Netral }}%</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <h4>Contoh Komentar dan Prediksi Sentimen (10 Sampel Acak)</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Teks Komentar (Awal)</th>
+                                    <th>Prediksi Sentimen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sample in sentiment_samples %}
+                                <tr>
+                                    <td>{{ sample.text }}</td>
+                                    <td>
+                                        <span class="sentiment-label {{ sample.sentiment|lower }}">{{ sample.sentiment }}</span>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="2">Tidak ada sampel sentimen.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p><i>Data simulasi sentimen tidak tersedia. Silakan upload dataset .txt.</i></p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!--     MODIFIKASI PADA TAB VISUALISASI SENTIMEN  -->
+        <!-- ============================================= -->
+        <div id="tab-sentiment-viz" class="tab-content">
+            <div class="card">
+                <h2>Visualisasi Clustering & Distribusi Sentimen</h2>
+                <p>Tab ini berisi dua visualisasi: (1) Skor Silhouette untuk mengevaluasi seberapa baik data terkelompok secara alami, dan (2) Distribusi persentase dari prediksi sentimen pada data .txt.</p>
+
+                <!-- Tombol Kontrol Global -->
+                <div class="controls-container" style="padding: 15px; background-color: #1a1a1a; border-radius: 4px; border: 1px solid #333; justify-content: flex-start;">
+                     <button id="load-sentiment-chart-btn" class="query-form button" style="padding: 10px 15px; margin: 0;">Muat/Perbarui Distribusi</button>
+                     <button id="load-silhouette-score-btn" class="query-form button" style="padding: 10px 15px; margin: 0; background-color: #00fefd;">Hitung Skor Silhouette</button>
+                </div>
+                
+                <!-- HAPUS .viz-container-wrapper -->
+                    
+                <!-- ITEM 1: SILHOUETTE SCORE (Tata Letak Baru) -->
+                <div class="viz-item-container" style="width: 100%; margin-bottom: 20px;">
+                    <h3>Skor Silhouette (K-Means Clustering)</h3>
+                    <p style="font-size: 0.9em; margin-bottom: 15px;">Mengukur seberapa baik data TF-IDF terkelompok (K=3). Skor mendekati 1 berarti cluster padat & terpisah. Skor mendekati -1 berarti cluster salah.</p>
+                    
+                    <!-- Wrapper baru untuk gauge dan penjelasan -->
+                    <div class="silhouette-content-wrapper">
+                        <!-- Wrapper Kiri: Gauge + Label -->
+                        <div class="silhouette-gauge-wrapper">
+                            <div id="silhouette-gauge-container" class="silhouette-gauge-container" style="display: none;">
+                                <div class="gauge-outer">
+                                    <div class="gauge-inner">
+                                        <div id="silhouette-gauge-value" class="gauge-value">0.00</div>
+                                    </div>
+                                    <div id="silhouette-gauge-needle" class="gauge-needle"></div>
+                                </div>
+                            </div>
+                            <div id="silhouette-gauge-label" class="gauge-label">SEDANG MENGHITUNG...</div>
+                        </div>
+                        
+                        <!-- Wrapper Kanan: Penjelasan -->
+                        <div class="silhouette-explanation-wrapper">
+                            <div id="silhouette-visualisasi-error" class="distribution-result-container" style="display: none; margin-top: 0;">
+                                <!-- Pesan error akan muncul di sini -->
+                            </div>
+                             <p class="evaluation-explanation" style="margin-top: 0;">
+                                <strong>Penjelasan Hasil Skor Silhouette:</strong>
+                                <ul>
+                                    <li><strong>Apa Ini?</strong> Skor Silhouette mengukur seberapa "alami" data ulasan Anda terkelompok. Kami mencoba mengelompokkan data (menggunakan K-Means K=3) tanpa memberi "kunci jawaban" (label sentimen).</li>
+                                    <li><strong>Rentang Skor:</strong> +1 (Sempurna, klaster sangat terpisah) ➔ 0 (Kacau, klaster tumpang tindih) ➔ -1 (Salah total, data masuk ke klaster yang salah).</li>
+                                    <li><strong>Arti Skor Rendah (Misal: 0.059 - "Struktur Cluster Lemah"):</strong> Skor yang sangat rendah dan mendekati 0 ini adalah **temuan penting**. Ini berarti data ulasan Anda **sangat tumpang tindih**. Ulasan positif dan negatif menggunakan banyak kata yang sama (misal: "aplikasinya bagus, tapi notifikasi error"), sehingga sulit dipisahkan secara "buta" oleh algoritma clustering.</li>
+                                    <li><strong>Kesimpulan:</strong> Skor rendah ini **memvalidasi** mengapa kita perlu menggunakan model *supervised* (seperti Logistic Regression di tab "Analisis Sentimen") yang dilatih dengan "kunci jawaban" untuk bisa memprediksi sentimen secara akurat.</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PEMISAH ANTAR KONTEN -->
+                <hr class="section-divider">
+
+                <!-- ITEM 2: DISTRIBUSI SENTIMEN (Sekarang Lebar Penuh) -->
+                <div class="viz-item-container" style="width: 100%;">
+                    <h3>Distribusi Prediksi Sentimen (Data .txt)</h3>
+                    <p style="font-size: 0.9em; margin-bottom: 15px;">Persentase total prediksi sentimen (Positif, Negatif, Netral) di seluruh dataset .txt yang dimuat.</p>
+                    
+                    <div id="sentiment-chart-container-wrapper" class="result-container" style="display: none; background-color: #1a1a1a; padding: 20px; border: 1px solid #444; margin: 0;">
+                         <span id="sentiment-data-total-label" style="font-family: 'Orbitron'; color: #fefc00; font-size: 1.1em; text-align: right; display: block; margin-bottom: 15px;">Total Data: 0</span>
+                        
+                        <!-- Kontainer utama untuk bar chart horizontal -->
+                        <ul id="sentiment-chart-container" class="sentiment-h-bar-container">
+                            <!-- Grafik batang akan dirender oleh JS di sini -->
+                        </ul>
+                    </div>
+                    <div id="sentiment-visualisasi-error" class="distribution-result-container" style="display: none; margin-top: 20px;">
+                        <!-- Pesan error akan muncul di sini -->
+                    </div>
+                </div>
+
+                <!-- AKHIR PERUBAHAN TATA LETAK -->
+            </div>
+        </div>
+        <!-- ============================================= -->
+        <!--               AKHIR KONTEN TAB BARU           -->
+        <!-- ============================================= -->
+
+
+        <div id="tab-semantic" class="tab-content">
+            <!-- ... Konten tab Pencarian Semantik ... -->
+            <div class="card">
+                <h2>Pencarian Semantik</h2>
+                <p>Temukan komentar yang paling relevan berdasarkan makna kalimat atau konsep yang Anda masukkan, bukan hanya kata kunci. Menggunakan model *transformer* untuk memahami konteks.</p>
+                <form id="semantic-search-form" class="query-form">
+                    <label for="semantic-query-input">Masukkan Kueri (Kalimat/Konsep):</label>
+                    <input type="text" id="semantic-query-input" placeholder="Contoh: dampak kerusakan lingkungan, opini positif tentang aqua...">
+                    <button type="submit">Cari</button>
+                </form>
+                <h3>Hasil Pencarian (Top 5 Paling Mirip):</h3>
+                <div id="semantic-search-results" class="search-results-container">
+                    <p><i>Masukkan kueri di atas untuk memulai pencarian.</i></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-dataset" class="tab-content">
+            <!-- ... Konten tab Dataset ... -->
+            <div class="card">
+                <h2>Dataset (Corpus)</h2>
+                <p>Ini adalah teks asli dari dataset yang sedang diproses.</p>
+                <div class="corpus-display table-container">
+                    {% if documents %}
+                        {% for filename, content in documents.items() %}
+                            <div class="doc-item">
+                                <strong>{{ filename }}</strong>
+                                <pre>{{ content }}</pre>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>Dataset tidak berhasil dimuat. Silakan upload dataset baru.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-upload" class="tab-content">
+            <!-- ... Konten tab Upload ... -->
+            <div class="card">
+                <h2>Upload Dataset Baru</h2>
+                <p>Upload file `.txt` Anda untuk menggantikan dataset saat ini. Setiap baris dalam file akan diperlakukan sebagai satu dokumen (komentar).</p>
+                <form id="upload-form" action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data" class="upload-form">
+                    <label for="dataset-input">Pilih file .txt:</label>
+                    <input type="file" id="dataset-input" name="dataset_file" accept=".txt" required>
+                    <button type="submit" class="upload-button">Upload dan Proses Ulang</button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 - Magister Teknik Informatika Universitas Pamulang</p>
+        </div>
+    </footer>
+
+    <script>
+        // ... (Semua JavaScript dari file sebelumnya tetap sama) ...
+        // ... (Tidak perlu diubah, hanya HTML dan CSS) ...
+
+        function openTab(evt, tabName) {
+             var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        document.addEventListener("DOMContentLoaded", function() {
+             var defaultTab = '{{ "tab-ii" if inverted_index else "tab-upload" }}';
+            var tabButton = document.querySelector('.tab-link[onclick*="' + defaultTab + '"]');
+            if (tabButton) {
+                tabButton.click();
+            } else {
+                document.querySelector('.tab-link').click(); // Fallback
+            }
+        });
+        
+        // --- SCRIPT UPLOAD (Tetap ada dan berfungsi) ---
+        document.getElementById('upload-form').addEventListener('submit', function() {
+             document.getElementById('loading-overlay').style.display = 'flex';
+         });
+
+        // --- SCRIPT INTERAKSI W2V ---
+        const w2vForm = document.getElementById('w2v-query-form');
+        if (w2vForm) {
+             w2vForm.addEventListener('submit', function(e) {
+                e.preventDefault(); 
+                const queryWord = document.getElementById('w2v-query-input').value;
+                const tableBody = document.getElementById('w2v-results-body');
+                const submitButton = this.querySelector('button[type="submit"]');
+                tableBody.innerHTML = '<tr><td colspan="2">Mencari...</td></tr>';
+                submitButton.disabled = true;
+
+                fetch("{{ url_for('get_similar_words_route') }}", {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: new URLSearchParams({'word': queryWord})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    tableBody.innerHTML = ''; 
+                    submitButton.disabled = false; 
+                    if (data && data.error) {
+                         tableBody.innerHTML = `<tr><td colspan="2">${data.error}</td></tr>`;
+                         return;
+                    }
+                    if (Object.keys(data).length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="2">Silakan masukkan kata kueri.</td></tr>';
+                        return;
+                    }
+                    for (const [word, similar] of Object.entries(data)) {
+                        const row = tableBody.insertRow();
+                        row.innerHTML = `<td class="term-bold">${word}</td><td>${similar}</td>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    tableBody.innerHTML = '<tr><td colspan="2">Terjadi error. Cek konsol.</td></tr>';
+                    submitButton.disabled = false;
+                });
+            });
+        }
+
+        // --- SCRIPT SEMANTIC SEARCH ---
+        const semanticForm = document.getElementById('semantic-search-form');
+        const semanticResultsDiv = document.getElementById('semantic-search-results');
+        if (semanticForm) {
+            semanticForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const query = document.getElementById('semantic-query-input').value;
+                const submitButton = this.querySelector('button[type="submit"]');
+                if (!query.trim()) {
+                    semanticResultsDiv.innerHTML = '<p><i>Silakan masukkan kueri pencarian.</i></p>';
+                    return;
+                }
+                semanticResultsDiv.innerHTML = '<p><i>Mencari...</i></p>';
+                submitButton.disabled = true;
+                fetch("{{ url_for('semantic_search_route') }}", {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: new URLSearchParams({'query': query})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    semanticResultsDiv.innerHTML = ''; 
+                    submitButton.disabled = false;
+                    if (data.error) {
+                        semanticResultsDiv.innerHTML = `<p class="error-message">Error: ${data.error}</p>`;
+                        return;
+                    }
+                    if (!data.results || data.results.length === 0) {
+                        semanticResultsDiv.innerHTML = '<p><i>Tidak ada hasil yang ditemukan.</i></p>';
+                        return;
+                    }
+                    const resultList = document.createElement('ul');
+                    resultList.className = 'semantic-result-list'; 
+                    data.results.forEach(item => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <strong>${item.doc_name} (Skor: ${item.score})</strong>
+                            <p>${item.text}</p>
+                        `;
+                        resultList.appendChild(listItem);
+                    });
+                    semanticResultsDiv.appendChild(resultList);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    semanticResultsDiv.innerHTML = '<p class="error-message">Terjadi error saat menghubungi server. Cek konsol.</p>';
+                    submitButton.disabled = false;
+                });
+            });
+        }
+
+        // --- SCRIPT DROPDOWN LDA ---
+        const ldaSelect = document.getElementById('lda-doc-select');
+        const ldaResultDiv = document.getElementById('lda-distribution-result');
+
+        if (ldaSelect && ldaResultDiv) {
+            ldaSelect.addEventListener('change', function(e) {
+                const selectedDocId = this.value;
+                ldaResultDiv.innerHTML = '<p><i>Mengambil distribusi topik...</i></p>';
+
+                fetch("{{ url_for('get_topic_distribution_route') }}", {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: new URLSearchParams({'doc_id': selectedDocId})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    ldaResultDiv.innerHTML = ''; // Clear previous results
+
+                    if (data.error) {
+                        ldaResultDiv.innerHTML = `<p class="error-message">Error: ${data.error}</p>`;
+                        return;
+                    }
+
+                    if (Object.keys(data).length === 0) {
+                         ldaResultDiv.innerHTML = '<p><i>Tidak ada data distribusi topik.</i></p>';
+                         return;
+                    }
+
+                    const distributionList = document.createElement('ul');
+                    distributionList.className = 'topic-distribution-list'; 
+
+                    for (const [topicName, percentage] of Object.entries(data)) {
+                        const listItem = document.createElement('li');
+                        
+                        const barContainer = document.createElement('div');
+                        barContainer.className = 'bar-container';
+
+                        const topicLabel = document.createElement('span');
+                        topicLabel.className = 'bar-label';
+                        topicLabel.textContent = topicName;
+
+                        const barWrapper = document.createElement('div');
+                        barWrapper.className = 'bar-wrapper';
+
+                        const bar = document.createElement('div');
+                        bar.className = 'bar';
+                        bar.style.width = percentage + '%'; 
+                        
+                        const percentageLabel = document.createElement('span');
+                        percentageLabel.className = 'bar-percentage';
+                        percentageLabel.textContent = percentage + '%';
+
+                        barWrapper.appendChild(bar);
+                        barContainer.appendChild(topicLabel);
+                        barContainer.appendChild(barWrapper);
+                        barContainer.appendChild(percentageLabel);
+                        listItem.appendChild(barContainer);
+
+                        distributionList.appendChild(listItem);
+                    }
+                    ldaResultDiv.appendChild(distributionList);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    ldaResultDiv.innerHTML = '<p class="error-message">Terjadi error saat menghubungi server. Cek konsol.</p>';
+                });
+            });
+
+            if (ldaSelect.options.length > 0) {
+                ldaSelect.dispatchEvent(new Event('change'));
+            }
+        }
+        // --- AKHIR SCRIPT LDA ---
+
+        
+        // --- SCRIPT BARU UNTUK DROPDOWN BERTOPIC (PINDAH KE SINI) ---
+        const bertopicSelect = document.getElementById('bertopic-doc-select');
+        const bertopicResultDiv = document.getElementById('bertopic-distribution-result');
+
+        if (bertopicSelect && bertopicResultDiv) {
+            bertopicSelect.addEventListener('change', function(e) {
+                const selectedDocId = this.value;
+                bertopicResultDiv.innerHTML = '<p><i>Mengambil distribusi topik BERTopic...</i></p>';
+
+                fetch("{{ url_for('get_bertopic_distribution_route') }}", {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: new URLSearchParams({'doc_id': selectedDocId})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    bertopicResultDiv.innerHTML = ''; 
+
+                    if (data.error) {
+                        bertopicResultDiv.innerHTML = `<p class="error-message">Error: ${data.error}</p>`;
+                        return;
+                    }
+
+                    if (Object.keys(data).length === 0) {
+                         bertopicResultDiv.innerHTML = '<p><i>Tidak ada data distribusi topik (mungkin semua probabilitas 0).</i></p>';
+                         return;
+                    }
+
+                    const distributionList = document.createElement('ul');
+                    distributionList.className = 'topic-distribution-list'; 
+
+                    for (const [topicName, percentage] of Object.entries(data)) {
+                        
+                        if (percentage <= 0.0) {
+                            continue;
+                        }
+
+                        const listItem = document.createElement('li');
+                        
+                        const barContainer = document.createElement('div');
+                        barContainer.className = 'bar-container';
+
+                        const topicLabel = document.createElement('span');
+                        topicLabel.className = 'bar-label';
+                        topicLabel.style.flexBasis = '200px'; 
+                        topicLabel.textContent = topicName;
+
+                        const barWrapper = document.createElement('div');
+                        barWrapper.className = 'bar-wrapper';
+
+                        const bar = document.createElement('div');
+                        bar.className = 'bar';
+                        bar.style.width = percentage + '%'; 
+                        
+                        const percentageLabel = document.createElement('span');
+                        percentageLabel.className = 'bar-percentage';
+                        percentageLabel.textContent = percentage + '%';
+
+                        barWrapper.appendChild(bar);
+                        barContainer.appendChild(topicLabel);
+                        barContainer.appendChild(barWrapper);
+                        barContainer.appendChild(percentageLabel);
+                        listItem.appendChild(barContainer);
+
+                        distributionList.appendChild(listItem);
+                    }
+                    
+                    if (distributionList.children.length === 0) {
+                         bertopicResultDiv.innerHTML = '<p><i>Tidak ada topik dengan probabilitas > 0% untuk dokumen ini.</i></p>';
+                    } else {
+                        bertopicResultDiv.appendChild(distributionList);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    bertopicResultDiv.innerHTML = '<p class="error-message">Terjadi error saat menghubungi server. Cek konsol.</p>';
+                });
+            });
+
+            if (bertopicSelect.options.length > 0) {
+                bertopicSelect.dispatchEvent(new Event('change'));
+            }
+        }
+        // --- AKHIR SCRIPT BERTOPIC ---
+
+        
+        // --- SCRIPT BARU: VISUALISASI SENTIMEN (DIROMBAK) ---
+        const btnSentimentChart = document.getElementById('load-sentiment-chart-btn');
+        const chartContainerWrapper = document.getElementById('sentiment-chart-container-wrapper');
+        const chartContainer = document.getElementById('sentiment-chart-container');
+        const chartError = document.getElementById('sentiment-visualisasi-error');
+        const totalLabel = document.getElementById('sentiment-data-total-label');
+
+        if (btnSentimentChart) {
+            btnSentimentChart.addEventListener('click', loadSentimentChart);
+        }
+
+        function loadSentimentChart() {
+            btnSentimentChart.disabled = true;
+            btnSentimentChart.textContent = "Memuat...";
+            chartContainerWrapper.style.display = 'none';
+            chartError.style.display = 'none';
+
+            fetch("{{ url_for('get_sentiment_visualization_data') }}")
+                .then(response => response.json())
+                .then(data => {
+                    btnSentimentChart.disabled = false;
+                    btnSentimentChart.textContent = "Muat/Perbarui Distribusi";
+
+                    if (data.error) {
+                        chartError.innerHTML = `<p class="error-message">${data.error}</p>`;
+                        chartError.style.display = 'block';
+                        return;
+                    }
+
+                    chartContainerWrapper.style.display = 'block';
+                    chartContainer.innerHTML = ''; // Kosongkan chart lama
+
+                    const total = data.Total || 0;
+                    const counts = {
+                        'Positif': data.Positif || 0,
+                        'Negatif': data.Negatif || 0,
+                        'Netral': data.Netral || 0
+                    };
+                    
+                    totalLabel.textContent = `Total Data: ${total}`;
+
+                    if (total === 0) {
+                        chartContainer.innerHTML = "<p><i>Tidak ada data untuk divisualisasikan.</i></p>";
+                        return;
+                    }
+
+                    // Buat bar horizontal
+                    for (const sentiment in counts) {
+                        const count = counts[sentiment];
+                        const percentage = (total > 0) ? (count / total) * 100 : 0;
+                        const sentimentClass = sentiment.toLowerCase();
+
+                        const barItem = document.createElement('li');
+                        barItem.className = 'sentiment-h-bar-item';
+
+                        barItem.innerHTML = `
+                            <span class="sentiment-h-bar-label ${sentimentClass}">${sentiment}</span>
+                            <div class="sentiment-h-bar-wrapper">
+                                <div class="sentiment-h-bar ${sentimentClass}" style="width: 0%;"></div>
+                            </div>
+                            <span class="sentiment-h-bar-percentage">${percentage.toFixed(1)}%</span>
+                            <span class="sentiment-h-bar-count">(${count})</span>
+                        `;
+                        
+                        chartContainer.appendChild(barItem);
+                        
+                        // Set lebar secara dinamis untuk animasi
+                        setTimeout(() => {
+                            barItem.querySelector('.sentiment-h-bar').style.width = `${percentage}%`;
+                        }, 100); 
+                    }
+                })
+                .catch(error => {
+                    btnSentimentChart.disabled = false;
+                    btnSentimentChart.textContent = "Muat/Perbarui Distribusi";
+                    console.error('Error fetching sentiment chart data:', error);
+                    chartError.innerHTML = `<p class="error-message">Terjadi error saat mengambil data chart: ${error}</p>`;
+                    chartError.style.display = 'block';
+                });
+        }
+        
+        // --- SCRIPT BARU: SILHOUETTE SCORE GAUGE ---
+        const btnSilhouette = document.getElementById('load-silhouette-score-btn');
+        const gaugeContainer = document.getElementById('silhouette-gauge-container');
+        const gaugeNeedle = document.getElementById('silhouette-gauge-needle');
+        const gaugeValue = document.getElementById('silhouette-gauge-value');
+        const gaugeLabel = document.getElementById('silhouette-gauge-label');
+        const silhouetteError = document.getElementById('silhouette-visualisasi-error');
+
+        if (btnSilhouette) {
+            btnSilhouette.addEventListener('click', loadSilhouetteScore);
+        }
+
+        function loadSilhouetteScore() {
+            btnSilhouette.disabled = true;
+            btnSilhouette.textContent = "Menghitung...";
+            gaugeContainer.style.display = 'none';
+            silhouetteError.style.display = 'none';
+
+            fetch("{{ url_for('get_silhouette_score') }}")
+                .then(response => response.json())
+                .then(data => {
+                    btnSilhouette.disabled = false;
+                    btnSilhouette.textContent = "Hitung Skor Silhouette";
+
+                    if (data.error) {
+                        silhouetteError.innerHTML = `<p class="error-message">${data.error}</p>`;
+                        silhouetteError.style.display = 'block';
+                        return;
+                    }
+                    
+                    gaugeContainer.style.display = 'block';
+                    const score = data.score; // Skor antara -1 dan 1
+                    
+                    // Ubah skor -1 s/d 1 menjadi rotasi 0 s/d 180 derajat
+                    // (-1 -> 0 deg), (0 -> 90 deg), (1 -> 180 deg)
+                    const rotation = (score + 1) * 90; 
+
+                    gaugeValue.textContent = score.toFixed(3);
+                    gaugeNeedle.style.transform = `rotate(${rotation}deg)`;
+
+                    if (score > 0.5) {
+                        gaugeLabel.textContent = "Struktur Cluster Kuat";
+                        gaugeValue.style.color = "#00fefd"; // Cyan
+                    } else if (score > 0.25) {
+                        gaugeLabel.textContent = "Struktur Cluster Wajar";
+                        gaugeValue.style.color = "#fefc00"; // Kuning
+                    } else if (score > 0) {
+                        gaugeLabel.textContent = "Struktur Cluster Lemah";
+                        gaugeValue.style.color = "#888"; // Abu-abu
+                    } else {
+                        gaugeLabel.textContent = "Cluster Tumpang Tindih";
+                        gaugeValue.style.color = "#f02d00"; // Merah
+                    }
+                })
+                .catch(error => {
+                    btnSilhouette.disabled = false;
+                    btnSilhouette.textContent = "Hitung Skor Silhouette";
+                    console.error('Error fetching silhouette score:', error);
+                    silhouetteError.innerHTML = `<p class="error-message">Terjadi error: ${error}</p>`;
+                    silhouetteError.style.display = 'block';
+                });
+        }
+        // --- AKHIR SCRIPT SILHOUETTE ---
+
+        
+        // --- SCRIPT EFEK MATRIX (BARU) ---
+        const canvasLeft = document.getElementById('matrix-canvas-left');
+        const canvasRight = document.getElementById('matrix-canvas-right');
+        const ctxLeft = canvasLeft.getContext('2d');
+        const ctxRight = canvasRight.getContext('2d');
+
+        const setupCanvas = (canvas, ctx) => {
+            canvas.width = window.innerWidth * 0.1; // Lebar 10%
+            canvas.height = window.innerHeight;
+            
+            ctx.fillStyle = "#0a0a0a"; // Latar belakang
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            return {
+                width: canvas.width,
+                height: canvas.height,
+                columns: Math.floor(canvas.width / 15), // Ukuran font 15
+                drops: []
+            };
+        };
+
+        let leftParams = setupCanvas(canvasLeft, ctxLeft);
+        let rightParams = setupCanvas(canvasRight, ctxRight);
+        
+        for (let i = 0; i < leftParams.columns; i++) {
+            leftParams.drops[i] = 1;
+        }
+        for (let i = 0; i < rightParams.columns; i++) {
+            rightParams.drops[i] = 1;
+        }
+
+        const matrixChars = "01"; // Karakter matrix
+        const fontSize = 15;
+
+        function drawMatrix() {
+            // Draw Left
+            ctxLeft.fillStyle = "rgba(10, 10, 10, 0.05)"; // Efek pudar
+            ctxLeft.fillRect(0, 0, leftParams.width, leftParams.height);
+            
+            ctxLeft.fillStyle = "#00fefd"; // Warna teks (cyan)
+            ctxLeft.font = fontSize + "px 'Rajdhani'";
+            
+            for (let i = 0; i < leftParams.drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                ctxLeft.fillText(text, i * fontSize, leftParams.drops[i] * fontSize);
+                
+                if (leftParams.drops[i] * fontSize > leftParams.height && Math.random() > 0.975) {
+                    leftParams.drops[i] = 0; // Reset ke atas
+                }
+                leftParams.drops[i]++;
+            }
+
+            // Draw Right
+            ctxRight.fillStyle = "rgba(10, 10, 10, 0.05)"; // Efek pudar
+            ctxRight.fillRect(0, 0, rightParams.width, rightParams.height);
+            
+            ctxRight.fillStyle = "#00fefd"; // Warna teks (cyan)
+            ctxRight.font = fontSize + "px 'Rajdhani'";
+            
+            for (let i = 0; i < rightParams.drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                ctxRight.fillText(text, i * fontSize, rightParams.drops[i] * fontSize);
+                
+                if (rightParams.drops[i] * fontSize > rightParams.height && Math.random() > 0.975) {
+                    rightParams.drops[i] = 0; // Reset ke atas
+                }
+                rightParams.drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 40); // Kecepatan animasi
+
+        // Atur ulang canvas jika ukuran jendela berubah
+        window.addEventListener('resize', () => {
+            leftParams = setupCanvas(canvasLeft, ctxLeft);
+            rightParams = setupCanvas(canvasRight, ctxRight);
+            
+            for (let i = 0; i < leftParams.columns; i++) {
+                leftParams.drops[i] = 1;
+            }
+            for (let i = 0; i < rightParams.columns; i++) {
+                rightParams.drops[i] = 1;
+            }
+        });
+        // --- AKHIR SCRIPT EFEK MATRIX ---
+
+    </script>
+    </body>
+</html>
+

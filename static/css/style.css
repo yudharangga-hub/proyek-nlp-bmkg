@@ -1,0 +1,990 @@
+/*
+ * THEME: "Night City Interface" (Cyberpunk 2077)
+ * File: style.css
+ */
+
+/* Import Font: Orbitron (Headers) dan Rajdhani (Body) */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;400;700&display.swap');
+
+/* Reset dan Pengaturan Dasar */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 400;
+    background-color: #0a0a0a;
+    background-image: 
+        linear-gradient(rgba(0, 254, 253, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 254, 253, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    color: #e8e8e8;
+    line-height: 1.6;
+    overflow-x: hidden; /* Mencegah scroll horizontal */
+}
+
+/* ================================== */
+/* === EFEK MATRIX BARU === */
+/* ================================== */
+#matrix-canvas-left,
+#matrix-canvas-right {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 10%; /* Lebar area efek */
+    height: 100%;
+    z-index: -1; /* Di belakang semua konten */
+    opacity: 0.5;
+}
+#matrix-canvas-left {
+    left: 0;
+}
+#matrix-canvas-right {
+    right: 0;
+}
+
+
+.container {
+    max-width: 1200px; /* Dipersempit agar ada ruang di sisi */
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative; /* Diperlukan agar z-index bekerja */
+    z-index: 1;
+}
+
+/* Header dan Logo (Arasaka Corp Style) */
+header {
+    background-color: #0a0a0a;
+    padding: 15px 0;
+    color: white;
+    border-bottom: 2px solid #fefc00;
+    box-shadow: 0 2px 10px rgba(254, 252, 0, 0.3);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    height: 70px;
+    width: auto;
+}
+
+header h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: #fefc00;
+    font-weight: 700;
+    font-size: 1.8em;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px #fefc00;
+}
+
+/* Scroll Text (Data Stream) */
+.scroll-container {
+    width: 100%;
+    overflow: hidden;
+    background-color: #000;
+    color: #00fefd;
+    padding: 10px 0;
+    white-space: nowrap;
+    box-shadow: inset 0 3px 5px rgba(0,0,0,0.4);
+    border-bottom: 1px solid #333;
+}
+
+.scroll-text {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll 25s linear infinite;
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1em;
+}
+
+@keyframes scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+/* === Styling Tab (Holo-Interface) === */
+main.container {
+    padding-top: 30px;
+}
+
+.tab-buttons {
+    display: flex;
+    flex-wrap: wrap; /* Memastikan tab bisa turun jika tidak muat */
+    border-bottom: 2px solid #444;
+    margin-bottom: 25px;
+}
+
+.tab-link {
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 12px 15px; /* Sedikit mengurangi padding horizontal */
+    cursor: pointer;
+    font-size: 1.0em; /* Sedikit mengurangi font size */
+    font-weight: 400;
+    color: #888;
+    transition: all 0.3s ease;
+    margin-right: 2px; /* Mengurangi margin */
+    position: relative;
+    top: 2px;
+    flex-grow: 1; /* Kunci agar proporsional */
+    text-align: center; /* Pastikan teks di tengah */
+    flex-basis: 0; /* Distribusi ruang yang adil */
+}
+
+.tab-link:hover {
+    color: #fefc00;
+}
+
+.tab-link.active {
+    background-color: transparent;
+    border-bottom: 3px solid #00fefd;
+    color: #00fefd;
+    text-shadow: 0 0 10px rgba(0, 254, 253, 0.5);
+}
+
+/* Konten Tab */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.5s;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* === AKHIR STYLING TAB === */
+
+
+/* Kartu Konten (Cyberdeck Panel) */
+.card {
+    background-color: rgba(10, 10, 10, 0.85);
+    border-radius: 4px;
+    border: 1px solid #00fefd;
+    box-shadow: 0 0 15px rgba(0, 254, 253, 0.3) inset;
+    padding: 30px;
+    overflow: hidden;
+    backdrop-filter: blur(3px); 
+}
+
+.card h2 {
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    color: #fefc00;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.card h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: #00fefd;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.card h4 {
+    color: #e8e8e8;
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+
+.card p {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    color: #ccc;
+    font-weight: 300;
+}
+
+/* Tampilan Tabel (Data Readout) */
+.table-container {
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid #00fefd;
+    border-radius: 4px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+    font-size: 1.05em;
+    font-weight: 400;
+}
+
+th {
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    background-color: #fefc00;
+    color: #000;
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+tr:nth-child(even) {
+    background-color: #1a1a1a;
+}
+tr:hover {
+    background-color: #2a2a2a;
+}
+
+/* Styling khusus untuk term (Data Link) */
+td:first-child, .term-bold {
+    font-weight: 700;
+    color: #00fefd;
+}
+
+/* Tampilan Dataset (Corpus) */
+.corpus-display {
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 15px;
+    background: #1a1a1a;
+}
+.corpus-display .doc-item {
+    margin-bottom: 15px;
+}
+.corpus-display strong {
+    font-size: 1.2em;
+    color: #fefc00;
+    display: block;
+    margin-bottom: 5px;
+}
+.corpus-display pre {
+    background-color: #000;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #333;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1em;
+    color: #ccc;
+}
+
+/* Footer - DIMODIFIKASI */
+footer {
+    text-align: center;
+    padding: 30px 20px;
+    background-color: #0a0a0a;
+    margin-top: 30px;
+    border-top: 1px solid #333;
+
+    /* Gaya Baru untuk Teks Footer */
+    color: #fefc00; /* Warna kuning neon */
+    font-family: 'Orbitron', sans-serif; /* Font Cyberpunk */
+    font-weight: 700;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(254, 252, 0, 0.7); /* Efek cahaya */
+    animation: flicker 2.5s infinite alternate; /* Animasi berkelap-kelip */
+}
+
+/* Animasi Flicker untuk Footer */
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow: 
+            0 0 8px rgba(254, 252, 0, 0.7),
+            0 0 15px rgba(254, 252, 0, 0.5),
+            0 0 25px rgba(254, 252, 0, 0.3);
+        opacity: 1;
+    }
+    20%, 24%, 55% {
+        text-shadow: none;
+        opacity: 0.7;
+    }
+    57% {
+        text-shadow: 
+            0 0 8px rgba(254, 252, 0, 0.7),
+            0 0 15px rgba(254, 252, 0, 0.5),
+            0 0 25px rgba(254, 252, 0, 0.3),
+            0 0 40px rgba(254, 252, 0, 0.2); /* Sedikit lebih terang */
+        opacity: 0.8;
+    }
+}
+/* === AKHIR MODIFIKASI FOOTER === */
+
+
+/* === HALAMAN WORD CLOUD === */
+.wordcloud-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
+    border: 1px solid #444;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000;
+}
+.wordcloud-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* === FORM KONTROL INTERAKTIF (Terminal Input) === */
+.controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.query-form {
+    margin-top: 15px;
+    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+
+.query-form label {
+    font-weight: 700;
+    color: #e8e8e8;
+    font-size: 1.1em;
+}
+
+/* Input & Select fields */
+.query-form input[type="text"],
+.query-form select {
+    flex-grow: 1;
+    padding: 10px 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1em;
+    border: 1px solid #444;
+    border-radius: 4px;
+    min-width: 200px;
+    background-color: #111;
+    color: #e8e8e8;
+    transition: all 0.3s ease;
+}
+.query-form input[type="text"]:focus,
+.query-form select:focus {
+    outline: none;
+    border-color: #fefc00;
+    background-color: #000;
+    box-shadow: 0 0 5px rgba(254, 252, 0, 0.5);
+}
+
+/* Tombol (Execute) */
+.query-form.button,
+.query-form button {
+    padding: 10px 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.95em;
+    font-weight: 700;
+    color: #000;
+    background-color: #fefc00;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+.query-form.button:hover,
+.query-form button:hover {
+    background-color: #fff;
+    box-shadow: 0 0 10px #fefc00;
+}
+.query-form.button:disabled,
+.query-form button:disabled {
+    background-color: #555;
+    color: #888;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* === FORM UPLOAD (Data Ingress) === */
+.upload-form {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px dashed #555;
+    border-radius: 4px;
+    background-color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.upload-form label {
+    font-weight: 700;
+    font-size: 1.2em;
+}
+.upload-form input[type="file"] {
+    font-size: 1.1em;
+    font-family: 'Rajdhani', sans-serif;
+    color: #888;
+}
+.upload-form .upload-button {
+    padding: 12px 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #000;
+    background-color: #00fefd;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+.upload-form .upload-button:hover {
+    background-color: #fff;
+    box-shadow: 0 0 10px #00fefd;
+}
+
+/* === FLASH MESSAGES (Sistem Notifikasi) === */
+.flash-messages {
+    margin-bottom: 20px;
+}
+.flash-message {
+    padding: 15px 20px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 1.1em;
+    border: 1px solid transparent;
+    text-transform: uppercase;
+}
+.flash-message.success {
+    color: #00fefd;
+    background-color: #103a39;
+    border-color: #00fefd;
+}
+.flash-message.danger {
+    color: #f02d00;
+    background-color: #4a0f00;
+    border-color: #f02d00;
+}
+.flash-message.warning {
+    color: #fefc00;
+    background-color: #4d4c00;
+    border-color: #fefc00;
+}
+
+
+/* === LOADING OVERLAY (Connecting...) === */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    font-size: 1.2em;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+}
+#loading-overlay p {
+    margin-top: 20px;
+    color: white;
+}
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 8px solid #444;
+    border-top: 8px solid #fefc00;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* === TAB SENTIMEN (Scan Results) === */
+.sentiment-distribution {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 20px;
+    margin-bottom: 30px;
+    background-color: #1a1a1a;
+    border-radius: 4px;
+    border: 1px solid #444;
+}
+.sentiment-distribution p {
+    margin-bottom: 0;
+}
+
+/* Label Sentimen */
+.sentiment-label {
+    font-weight: 700;
+    font-size: 1.05em;
+    text-align: left;
+    text-transform: uppercase;
+}
+.sentiment-label.positive {
+    color: #00fefd;
+}
+.sentiment-label.negative {
+    color: #f02d00;
+}
+.sentiment-label.neutral {
+    color: #888;
+}
+
+/* Kontainer Chart */
+.donut-chart-container {
+    flex-shrink: 0;
+}
+.donut-chart {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    position: relative;
+    --stop1: calc(var(--pos) * 1%);
+    --stop2: calc((var(--pos) + var(--neg)) * 1%);
+    
+    background: conic-gradient(
+        #00fefd 0% var(--stop1),
+        #f02d00 var(--stop1) var(--stop2),
+        #888 var(--stop2) 100%
+    );
+}
+/* Lubang Donut */
+.donut-chart::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 60%;
+    background-color: #1a1a1a;
+    border-radius: 50%;
+}
+/* Legenda Chart */
+.sentiment-legend {
+    flex-grow: 1;
+    min-width: 200px;
+}
+.sentiment-legend p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2em;
+    margin-bottom: 12px;
+}
+.sentiment-legend p:last-child {
+    margin-bottom: 0;
+}
+.legend-color-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.legend-color-box.positive { background-color: #00fefd; }
+.legend-color-box.negative { background-color: #f02d00; }
+.legend-color-box.neutral { background-color: #888; }
+
+.sentiment-legend strong {
+    margin-left: auto;
+    font-size: 1.05em;
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+}
+/* === AKHIR TAB SENTIMEN === */
+
+
+/* === HASIL SEMANTIC SEARCH (Data Retrieval) === */
+.search-results-container {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #1a1a1a;
+    min-height: 100px;
+}
+.search-results-container p {
+    margin: 0;
+    font-style: italic;
+    color: #999;
+}
+.search-results-container p.error-message {
+    color: #f02d00;
+    font-weight: bold;
+    font-style: normal;
+}
+ul.semantic-result-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+ul.semantic-result-list li {
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+}
+ul.semantic-result-list li:last-child {
+    border-bottom: none;
+}
+ul.semantic-result-list li strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #00fefd;
+    font-size: 1.1em;
+}
+ul.semantic-result-list li p {
+    margin: 0;
+    font-size: 1.05em;
+    color: #bbb;
+}
+
+/* === PEMISAH SECTION === */
+hr.section-divider {
+    margin: 30px 0;
+    border: none;
+    border-top: 1px solid #444;
+}
+
+/* === HASIL DISTRIBUSI TOPIK (LDA & BERTOPIC) === */
+.distribution-result-container {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #1a1a1a;
+    min-height: 50px;
+}
+.distribution-result-container p {
+     margin: 0;
+    font-style: italic;
+    color: #999;
+}
+.distribution-result-container p.error-message {
+    color: #f02d00;
+    font-weight: bold;
+    font-style: normal;
+}
+ul.topic-distribution-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+ul.topic-distribution-list li {
+    margin-bottom: 12px;
+    font-size: 1em;
+}
+
+/* === VISUALISASI BAR (Data Bars) === */
+.bar-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.bar-label {
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 1.05em;
+    color: #e8e8e8;
+    text-align: right;
+}
+#lda-distribution-result .bar-label {
+    flex-basis: 80px;
+}
+#bertopic-distribution-result .bar-label {
+    flex-basis: 200px;
+}
+.bar-wrapper {
+    flex-grow: 1;
+    background-color: #333;
+    border-radius: 4px;
+    height: 20px;
+}
+.bar {
+    background-color: #00fefd;
+    height: 100%;
+    border-radius: 4px;
+    min-width: 1px;
+    transition: width 0.5s ease-out;
+    box-shadow: 0 0 8px rgba(0, 254, 253, 0.5);
+}
+.bar-percentage {
+    flex-basis: 50px;
+    flex-shrink: 0;
+    font-size: 1em;
+    font-weight: 700;
+    color: #e8e8e8;
+    text-align: left;
+    font-family: 'Orbitron', sans-serif;
+}
+/* === AKHIR VISUALISASI BAR === */
+
+
+/* ================================================= */
+/* === CSS BARU: EVALUASI, VIZ WRAPPER, GAUGE    === */
+/* ================================================= */
+
+/* Untuk #tab-sentiment */
+/* Kontainer baru untuk memusatkan item */
+.evaluation-item-full-width {
+    width: 100%;
+    margin-bottom: 20px; /* Jarak antar item */
+}
+
+/* Penjelasan Teks */
+.evaluation-explanation {
+    font-size: 0.95em !important;
+    color: #bbb !important;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 15px !important;
+    margin-top: 15px; /* Tambahan margin atas */
+}
+.evaluation-explanation ul {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 20px;
+}
+
+.report-table-container {
+    width: 100%; /* Lebar penuh */
+}
+/* Menaikkan max-height agar scrollbar tidak muncul cepat */
+.report-table-container .table-container {
+    max-height: 400px; 
+}
+
+.confusion-matrix-container {
+    width: 100%; /* Lebar penuh */
+    text-align: center; /* Pusatkan gambar */
+}
+.confusion-matrix-container img {
+    display: inline-block;
+    background-color: #111;
+    border: 1px solid #444;
+    border-radius: 4px;
+    max-width: 500px; /* Gambar lebih besar */
+    width: 100%;
+    height: auto;
+}
+
+
+/* Untuk #tab-sentiment-viz */
+/* HAPUS .viz-container-wrapper */
+.viz-container-wrapper {
+   display: block; /* HAPUS FLEX */
+}
+
+/* Ubah .viz-item-container */
+.viz-item-container {
+    /* flex: 1; */ /* HAPUS flex: 1 */
+    width: 100%; /* BUAT LEBAR PENUH */
+    min-width: 350px;
+    padding: 20px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #1a1a1a;
+    margin-bottom: 20px; /* TAMBAHKAN MARGIN BAWAH */
+}
+.viz-item-container:last-child {
+    margin-bottom: 0;
+}
+
+.viz-item-container h3 {
+    margin-top: 0;
+}
+
+/* ================================== */
+/* === TATA LETAK SILUET BARU === */
+/* ================================== */
+.silhouette-content-wrapper {
+    display: flex;
+    flex-wrap: wrap; /* Bungkus di layar kecil */
+    align-items: flex-start;
+    gap: 20px;
+}
+.silhouette-gauge-wrapper {
+    flex-basis: 280px; /* Lebar tetap untuk gauge */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Pusatkan gauge dan labelnya */
+}
+.silhouette-explanation-wrapper {
+    flex: 1; /* Ambil sisa ruang */
+    min-width: 300px; /* Lebar minimum sebelum membungkus */
+}
+.silhouette-explanation-wrapper .evaluation-explanation {
+    margin-top: 0 !important; /* Hapus margin atas pada penjelasan */
+}
+
+
+/* Gaya Bar Chart Horizontal (Pengganti Bar Vertikal) */
+ul.sentiment-h-bar-container {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+li.sentiment-h-bar-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+span.sentiment-h-bar-label {
+    flex-basis: 80px; /* Lebar label */
+    flex-shrink: 0;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    text-align: right;
+}
+div.sentiment-h-bar-wrapper {
+    flex-grow: 1;
+    height: 25px;
+    background-color: #333;
+    border-radius: 3px;
+    overflow: hidden;
+}
+div.sentiment-h-bar {
+    height: 100%;
+    width: 0%; /* Mulai dari 0, dianimasikan oleh JS */
+    border-radius: 3px;
+    transition: width 0.8s ease-out;
+}
+span.sentiment-h-bar-percentage {
+    flex-basis: 60px; /* Lebar persentase */
+    flex-shrink: 0;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    text-align: left;
+}
+span.sentiment-h-bar-count {
+    flex-basis: 50px;
+    flex-shrink: 0;
+    font-size: 0.9em;
+    color: #aaa;
+    text-align: left;
+}
+
+/* Warna Bar Horizontal (sesuai tema) */
+.sentiment-h-bar-label.positif,
+.sentiment-h-bar.positif {
+    color: #00fefd;
+    background-color: #00fefd;
+    box-shadow: 0 0 10px #00fefd;
+}
+.sentiment-h-bar-label.negatif,
+.sentiment-h-bar.negatif {
+    color: #f02d00;
+    background-color: #f02d00;
+    box-shadow: 0 0 10px #f02d00;
+}
+.sentiment-h-bar-label.netral,
+.sentiment-h-bar.netral {
+    color: #888;
+    background-color: #888;
+    box-shadow: 0 0 10px #888;
+}
+/* Hanya label yang butuh warna teks */
+.sentiment-h-bar-label {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+
+/* Gaya Gauge Silhouette Score */
+.silhouette-gauge-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+.gauge-outer {
+    width: 250px;
+    height: 125px; /* Setengah lingkaran */
+    border: 15px solid #333;
+    border-bottom: none;
+    border-radius: 125px 125px 0 0;
+    position: relative;
+    overflow: hidden;
+    /* Latar belakang gradien untuk gauge */
+    background: conic-gradient(
+        from -90deg,
+        #f02d00 0%,  /* -1 */
+        #fefc00 25%, /* -0.5 */
+        #888 50%,    /* 0 */
+        #00fefd 100% /* 1 */
+    );
+}
+.gauge-inner {
+    width: 190px;
+    height: 95px;
+    background: #1a1a1a;
+    border-radius: 190px 190px 0 0;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+.gauge-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #fff;
+    z-index: 10;
+}
+.gauge-needle {
+    width: 3px;
+    height: 110px;
+    background: #fff;
+    border: 1px solid #000;
+    border-radius: 3px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform-origin: bottom center;
+    transform: translateX(-50%) rotate(90deg); /* Mulai di 0 */
+    transition: transform 0.8s ease-out;
+    z-index: 5;
+    box-shadow: 0 0 5px #fff;
+}
+.gauge-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1em;
+    color: #fefc00;
+    margin-top: 15px;
+    font-weight: 700;
+    text-align: center;
+}
+
