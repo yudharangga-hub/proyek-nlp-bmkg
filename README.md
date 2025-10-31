@@ -12,6 +12,21 @@ Aplikasi web ini menyajikan berbagai analisis dalam antarmuka multi-tab.
 
 Tab ini menampilkan "tulang punggung" dari analisis NLP. Pengguna dapat melihat data teks yang telah diubah menjadi representasi numerik menggunakan Bag of Words (BoW), TF-IDF, dan Word Embeddings (Word2Vec) untuk menemukan kata-kata yang serupa secara kontekstual.
 
+
+
+
+Fitur BoW
+
+Fitur TF-IDF
+
+Fitur Word Embeddings
+
+<img src="screenshots/BoW.png" width="300" alt="Tampilan Bag of Words">
+
+<img src="screenshots/tf-idf.png" width="300" alt="Tampilan TF-IDF">
+
+<img src="screenshots/Word-Embed.png" width="300" alt="Tampilan Word Embeddings">
+
 2. Topic Modeling Otomatis (LDA & BERTopic)
 
 Untuk memahami "apa yang paling sering dibicarakan pengguna", dua model topic modeling diimplementasikan:
@@ -20,9 +35,21 @@ LDA (Latent Dirichlet Allocation): Metode statistik klasik untuk menemukan tema-
 
 BERTopic: Metode modern yang menggunakan embeddings SBERT untuk menemukan topik yang lebih akurat secara kontekstual.
 
+Tampilan LDA
+
+Tampilan BERTopic
+
+<img src="screenshots/lda.png" width="450" alt="Tampilan Topic Modeling LDA">
+
+<img src="screenshots/bertopic.png" width="450" alt="Tampilan Topic Modeling BERTopic">
+
 3. Visualisasi Word Cloud
 
 Visualisasi ringkas dari kata-kata yang paling sering muncul di seluruh dataset, memberikan gambaran instan tentang fokus utama ulasan.
+
+<p align="center">
+<img src="screenshots/word-cloud.png" width="600" alt="Tampilan Word Cloud">
+</p>
 
 4. Evaluasi Model & Analisis Sentimen (Supervised)
 
@@ -32,6 +59,14 @@ Laporan Evaluasi: Menampilkan Confusion Matrix visual untuk melihat kesalahan pr
 
 Simulasi Prediksi: Model yang sudah dilatih digunakan untuk memprediksi sentimen dari data yang diunggah, disajikan dalam bentuk grafik donat (terlihat di Sentimen.png).
 
+Confusion Matrix
+
+Distribusi Sentimen (Simulasi)
+
+<img src="screenshots/conf-matrix.png" width="450" alt="Tampilan Confusion Matrix">
+
+<img src="screenshots/Sentimen.png" width="450" alt="Tampilan Distribusi Sentimen Donat">
+
 5. Visualisasi Klastering & Distribusi (Unsupervised)
 
 Tab Visualisasi Sentimen: Tab ini berfokus pada hasil analisis data .txt yang diunggah:
@@ -40,9 +75,17 @@ Silhouette Score (K-Means): Mengukur seberapa "alami" data terkelompok menggunak
 
 Distribusi Sentimen: Grafik batang horizontal modern yang menampilkan persentase dan jumlah pasti dari prediksi.
 
-6. Upload Data
+<p align="center">
+<img src="screenshots/siluet-skor.png" width="700" alt="Tampilan Visualisasi Klastering dan Distribusi Sentimen">
+</p>
 
-Pengguna dapat mengunggah dataset .txt mereka sendiri untuk dianalisis secara real-time oleh semua model.
+6. Upload Data & Halaman Depan
+
+Tampilan halaman untuk mengunggah dataset baru (.txt).
+
+<p align="center">
+<img src="screenshots/upload.png" width="450" alt="Tampilan Halaman Upload Dataset">
+</p>
 
 Alur Kerja (Workflow) Proyek
 
